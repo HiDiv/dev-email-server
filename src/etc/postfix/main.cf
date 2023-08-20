@@ -24,8 +24,9 @@ compatibility_level = 3.6
 
 
 # TLS parameters
-smtpd_tls_cert_file=/etc/dovecot/private/mail.localhost.crt.pem
-smtpd_tls_key_file=/etc/dovecot/private/mail.localhost.key.pem
+smtpd_tls_cert_file=/etc/ssl/certs/mail.cert.pem
+smtpd_tls_key_file=/etc/ssl/private/mail.key.pem
+smtp_tls_CAfile = /etc/ssl/certs/ca.cert.pem
 smtpd_use_tls=yes
 smtpd_tls_session_cache_database = btree:${data_directory}/smtpd_scache
 smtpd_tls_security_level=may

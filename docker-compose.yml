@@ -1,0 +1,68 @@
+version: '3.8'
+
+services:
+  dev-email-server:
+    container_name: dev-email-server
+    image: hidiv/dev-email-server:latest
+    ports:
+      - target: 25
+        published: 25
+        protocol: tcp
+      - target: 465
+        published: 465
+        protocol: tcp
+      - target: 143
+        published: 143
+        protocol: tcp
+      - target: 993
+        published: 993
+        protocol: tcp
+      - target: 110
+        published: 110
+        protocol: tcp
+      - target: 995
+        published: 995
+        protocol: tcp
+      - target: 80
+        published: 80
+        protocol: tcp
+      - target: 443
+        published: 443
+        protocol: tcp
+    secrets:
+      - source: ca-cert
+        target: /etc/ssl/certs/ca.cert.pem
+        mode: 0444
+      - source: server-cert
+        target: /etc/ssl/certs/mail.cert.pem
+        mode: 0444
+      - source: server-key
+        target: /etc/ssl/private/mail.key.pem
+        mode: 0400
+      - source: ca-cert
+        target: /var/www/html/ca.crt
+        mode: 0444
+    volumes:
+      - dev-email-server-mail:/var/mail
+      - dev-email-server-data:/var/www/rainloop/data
+    deploy:
+      mode: replicated
+      replicas: 1
+      endpoint_mode: vip
+
+volumes:
+  dev-email-server-mail:
+    name: "dev-email-server-mail"
+  dev-email-server-data:
+    name: "dev-email-server-data"
+
+secrets:
+  ca-cert:
+    external: true
+    name: "dev-email-server-ca"
+  server-cert:
+    external: true
+    name: "dev-email-server-cert"
+  server-key:
+    external: true
+    name: "dev-email-server-key"
